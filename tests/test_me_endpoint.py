@@ -64,14 +64,13 @@ async def test_me_endpoint_dynamic_fact_and_timestamp():
     # Facts should differ most times, but allow fallback case
     assert isinstance(data1["fact"], str)
     assert isinstance(data2["fact"], str)
-    # Do not force inequality (some APIs return same fact occasionally)
     assert len(data1["fact"]) > 0
     assert len(data2["fact"]) > 0
 
 
 @pytest.mark.asyncio
 async def test_me_endpoint_handles_cat_api_failure(monkeypatch):
-    """✅ Ensure graceful fallback when Cat Facts API fails."""
+    # Ensure graceful fallback when Cat Facts API fails.
 
     async def mock_fail_cat_fact():
         raise Exception("Simulated failure")
@@ -87,5 +86,6 @@ async def test_me_endpoint_handles_cat_api_failure(monkeypatch):
     data = response.json()
     assert "fact" in data
     assert isinstance(data["fact"], str)
+    
     # Fallback fact must still be non-empty
     assert len(data["fact"]) > 0
